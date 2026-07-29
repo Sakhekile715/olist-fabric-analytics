@@ -216,3 +216,20 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Raw data — publicly available, don't bloat the repo
+data/
+
+# dbt
+target/
+dbt_packages/
+logs/
+.user.yml
+
+# Credentials
+.env
+profiles.yml
+
+# Power BI
+*.pbix.tmp
+~$*
