@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: olist_bronze
+    schema: dbo
+    description: "Raw Olist tables ingested via PySpark. Read cross-database from the lakehouse SQL endpoint - no data movement."
+    tables:
+      - name: bronze_customers
+      - name: bronze_geolocation
+      - name: bronze_orders
+      - name: bronze_order_items
+      - name: bronze_order_payments
+      - name: bronze_order_reviews
+      - name: bronze_products
+      - name: bronze_sellers
+      - name: bronze_category_translation
