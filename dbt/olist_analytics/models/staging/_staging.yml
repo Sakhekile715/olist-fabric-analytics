@@ -1,0 +1,80 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "One row per order-customer. customer_id is the true customer identifier and repeats across orders."
+    columns:
+      - name: customer_order_key
+        tests: [unique, not_null]
+      - name: customer_id
+        tests: [not_null]
+
+  - name: stg_orders
+    columns:
+      - name: order_id
+        tests: [unique, not_null]
+      - name: customer_order_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_order_key
+      - name: order_status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['delivered','shipped','canceled','unavailable','invoiced','processing','created','approved']
+
+  - name: stg_order_items
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [order_id, item_sequence]
+    columns:
+      - name: order_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+      - name: item_price
+        tests: [not_null]
+
+  - name: stg_order_payments
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [order_id, payment_sequence]
+    columns:
+      - name: payment_type
+        tests: [not_null]
+
+  - name: stg_order_reviews
+    description: "review_id is NOT unique in source - a small number map to multiple orders. Accepted rather than deduped; the reviews fact is built at order grain downstream."
+    columns:
+      - name: order_id
+        tests: [not_null]
+      - name: review_score
+        tests:
+          - accepted_values:
+              arguments:
+                values: [1,2,3,4,5]
+
+  - name: stg_products
+    columns:
+      - name: product_id
+        tests: [unique, not_null]
+
+  - name: stg_sellers
+    columns:
+      - name: seller_id
+        tests: [unique, not_null]
+
+  - name: stg_geolocation
+    description: "One row per geocoded address, ~1M rows across ~19k zip prefixes. zip_code is deliberately untested for uniqueness - aggregation to one point per prefix happens downstream."
+
+  - name: stg_category_translation
+    columns:
+      - name: category_name_pt
+        tests: [unique, not_null]
