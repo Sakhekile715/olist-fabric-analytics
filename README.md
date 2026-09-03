@@ -1,6 +1,47 @@
 # olist-fabric-analytics
 End-to-end analytics engineering pipeline on Microsoft Fabric - PySpark ingestion, dbt transformation, Power BI semantic layer
 
+## Status
+
+| Layer | State |
+|---|---|
+| Bronze ingestion (PySpark) | Complete |
+| Silver, dbt staging | Complete |
+| Gold, dims/facts/marts | Complete, 48 tests passing |
+| Power BI report | In progress |
+
+## Running this project
+
+**Prerequisites.** A Microsoft Fabric workspace with a warehouse, Python 3.11,
+dbt-core 1.12, dbt-fabric 1.10, ODBC Driver 18 for SQL Server, and the Azure CLI.
+
+**Data.** The Brazilian E-Commerce Public Dataset by Olist, from Kaggle
+(`olistbr/brazilian-ecommerce`). Upload the nine CSVs to `Files/raw_data/` in the
+lakehouse; the ingestion notebook reads them from there.
+
+**Setup.**
+
+```powershell
+git clone https://github.com/Sakhekile715/olist-fabric-analytics.git
+cd olist-fabric-analytics
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+mkdir $HOME\.dbt -Force
+copy profiles.yml.example $HOME\.dbt\profiles.yml   # then fill in your warehouse endpoint
+az login --allow-no-subscriptions
+```
+
+**Run.** Install the dbt packages, run the Bronze notebook once to land the Delta
+tables, then build the Silver and Gold layers:
+
+```powershell
+cd dbt\olist_analytics
+dbt deps
+# in Fabric: run notebooks/01_bronze_ingestion.ipynb
+dbt build
+```
+
 ## Key Finding: Delivery Lateness Has a Non-Linear Effect on Satisfaction
 
 Analysis of 95,830 delivered orders with reviews, from `gold.mart_delivery_performance`.
@@ -64,6 +105,14 @@ values and composite grains.
 - **Customer grain.** `customer_id` in the source is generated per order;
   `customer_unique_id` identifies the actual customer. The customer dimension is
   built on the latter, so repeat-purchase behaviour remains analysable.
+- **Delivery bands live on the fact, not in a dimension.** `delivery_bucket` is
+  defined once in a macro and materialised on `fct_orders` alongside
+  `delivery_bucket_sort`. `mart_delivery_performance` reads both from the fact
+  rather than recomputing them, so the definitions cannot drift apart.
+- **Power BI report not versioned as `.pbix`.** The binary format can't be diffed
+  or reviewed in a pull request. The theme JSON is versioned; the report itself
+  will move to `.pbip` folder format so the semantic model and report definition
+  become text.
 
 ### Lineage
 
