@@ -74,6 +74,14 @@ final AS (
     LEFT JOIN item_totals i    ON o.order_id = i.order_id
     LEFT JOIN payment_totals p ON o.order_id = p.order_id
     LEFT JOIN reviews r        ON o.order_id = r.order_id
+),
+
+bucketed AS (
+    SELECT
+        *,
+        CAST({{ delivery_bucket('delivery_variance_days') }} AS VARCHAR(20)) AS delivery_bucket,
+        {{ delivery_bucket_sort('delivery_variance_days') }} AS delivery_bucket_sort
+    FROM final
 )
 
-SELECT * FROM final
+SELECT * FROM bucketed
