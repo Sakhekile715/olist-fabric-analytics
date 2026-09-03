@@ -52,6 +52,19 @@ models:
               arguments:
                 to: ref('dim_date')
                 field: date_key
+      - name: delivery_bucket
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - 'Not delivered'
+                  - '10+ days early'
+                  - '5-9 days early'
+                  - '1-4 days early'
+                  - 'On time'
+                  - '1-4 days late'
+                  - '5-9 days late'
+                  - '10+ days late'
 
   - name: fct_order_items
     columns:
@@ -69,3 +82,9 @@ models:
               arguments:
                 to: ref('dim_seller')
                 field: seller_key
+
+  - name: mart_delivery_performance
+    description: "Delivery variance bands with review and value metrics. Bands are defined once in the delivery_bucket macro and carried on fct_orders; delivery_bucket_sort gives display order and drives score_delta_vs_earliest."
+
+  - name: mart_sales_performance
+    description: "One row per category per month, delivered orders only. Revenue is item price excluding freight; adds running total, month-over-month growth, and within-month category rank and share."

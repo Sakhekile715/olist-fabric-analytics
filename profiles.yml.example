@@ -1,0 +1,22 @@
+# Copy to ~/.dbt/profiles.yml and fill in your own warehouse endpoint.
+#
+# Sign in with the account that owns the Fabric workspace.
+# Requires: az login --allow-no-subscriptions
+#   (the tenant has no Azure subscription, so a plain `az login` fails)
+#
+# Finding the server value: in the Fabric portal, open the workspace, select the
+# warehouse, then Settings > SQL endpoint > SQL connection string. Copy that host
+# in place of <your-endpoint> below.
+
+olist_analytics:
+  target: dev
+  outputs:
+    dev:
+      type: fabric
+      driver: 'ODBC Driver 18 for SQL Server'
+      server: <your-endpoint>.datawarehouse.fabric.microsoft.com
+      port: 1433
+      database: olist_dwh
+      schema: gold
+      authentication: CLI
+      threads: 4

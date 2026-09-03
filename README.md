@@ -1,40 +1,5 @@
 # olist-fabric-analytics
 End-to-end analytics engineering pipeline on Microsoft Fabric - PySpark ingestion, dbt transformation, Power BI semantic layer
-## Architecture
-
-Medallion architecture on Microsoft Fabric.
-
-**Bronze** — raw ingestion. Nine Olist CSVs land in `Files/raw_data/` unmodified,
-then load to Delta tables via PySpark with no transformation applied. Audit columns
-(`_ingested_at`, `_source_file`) record lineage. Bronze is the reproducible starting
-point: downstream layers rebuild from here rather than from the original source.
-
-**Silver** — cleaning and conformance via dbt. Nine staging models applying type
-casting, deduplication, null handling and business key definition, materialised as
-views. Reads Bronze cross-database from the lakehouse SQL endpoint using three-part
-naming, so no data is copied between layers.
-
-**Gold** — dimensional model. Five dimensions and two facts with hashed surrogate
-keys, plus two analytical marts. Items, payments and reviews are each pre-aggregated
-to order grain before joining, preventing the fan-out that would otherwise inflate
-revenue figures. 65 dbt tests cover uniqueness, referential integrity, accepted
-values and composite grains.
-
-### Design decisions
-
-- **`inferSchema` on ingest.** Acceptable at 130MB; explicit schemas would be
-  required at scale, where the extra read pass and inference errors on
-  leading-zero fields become material.
-- **`multiLine` and `escape` CSV options.** Review records contain free-text
-  comments with embedded newlines and quotes. Without these, records split across
-  rows silently — reconciliation confirmed 99,224 rows, matching source exactly.
-- **Manual notebook export over Fabric Git integration.** Workspace-level Git sync
-  requires a tenant-level switch not enabled in this environment. Notebooks are
-  exported and versioned manually. In a production tenant, workspace sync to a
-  dedicated branch would replace this.
-- **Customer grain.** `customer_id` in the source is generated per order;
-  `customer_unique_id` identifies the actual customer. The customer dimension is
-  built on the latter, so repeat-purchase behaviour remains analysable.
 
 ## Key Finding: Delivery Lateness Has a Non-Linear Effect on Satisfaction
 
@@ -63,6 +28,42 @@ customer — and 6,382 orders still missed it.
 
 The practical implication: operational investment in reducing late deliveries
 returns far more than investment in making early deliveries earlier.
+
+## Architecture
+
+Medallion architecture on Microsoft Fabric.
+
+**Bronze** — raw ingestion. Nine Olist CSVs land in `Files/raw_data/` unmodified,
+then load to Delta tables via PySpark with no transformation applied. Audit columns
+(`_ingested_at`, `_source_file`) record lineage. Bronze is the reproducible starting
+point: downstream layers rebuild from here rather than from the original source.
+
+**Silver** — cleaning and conformance via dbt. Nine staging models applying type
+casting, deduplication, null handling and business key definition, materialised as
+views. Reads Bronze cross-database from the lakehouse SQL endpoint using three-part
+naming, so no data is copied between layers.
+
+**Gold** — dimensional model. Five dimensions and two facts with hashed surrogate
+keys, plus two analytical marts. Items, payments and reviews are each pre-aggregated
+to order grain before joining, preventing the fan-out that would otherwise inflate
+revenue figures. 48 dbt tests cover uniqueness, referential integrity, accepted
+values and composite grains.
+
+### Design decisions
+
+- **`inferSchema` on ingest.** Acceptable at 130MB; explicit schemas would be
+  required at scale, where the extra read pass and inference errors on
+  leading-zero fields become material.
+- **`multiLine` and `escape` CSV options.** Review records contain free-text
+  comments with embedded newlines and quotes. Without these, records split across
+  rows silently — reconciliation confirmed 99,224 rows, matching source exactly.
+- **Manual notebook export over Fabric Git integration.** Workspace-level Git sync
+  requires a tenant-level switch not enabled in this environment. Notebooks are
+  exported and versioned manually. In a production tenant, workspace sync to a
+  dedicated branch would replace this.
+- **Customer grain.** `customer_id` in the source is generated per order;
+  `customer_unique_id` identifies the actual customer. The customer dimension is
+  built on the latter, so repeat-purchase behaviour remains analysable.
 
 ### Lineage
 
