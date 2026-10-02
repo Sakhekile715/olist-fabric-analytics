@@ -56,11 +56,7 @@ final AS (
         DATEDIFF(DAY, o.purchased_at, o.delivered_at)            AS days_to_deliver,
         DATEDIFF(DAY, o.purchased_at, o.estimated_delivery_at)   AS days_estimated,
         DATEDIFF(DAY, o.estimated_delivery_at, o.delivered_at)   AS delivery_variance_days,
-        CASE
-            WHEN o.delivered_at > o.estimated_delivery_at THEN 1
-            WHEN o.delivered_at IS NULL THEN NULL
-            ELSE 0
-        END                                                      AS is_late,
+        {{ is_late('o.delivered_at', 'o.estimated_delivery_at') }} AS is_late,
         COALESCE(i.item_count, 0)        AS item_count,
         COALESCE(i.gross_item_value, 0)  AS gross_item_value,
         COALESCE(i.total_freight, 0)     AS total_freight,
