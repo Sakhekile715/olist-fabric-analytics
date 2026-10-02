@@ -7,7 +7,7 @@ End-to-end analytics engineering pipeline on Microsoft Fabric - PySpark ingestio
 |---|---|
 | Bronze ingestion (PySpark) | Complete |
 | Silver, dbt staging | Complete |
-| Gold, dims/facts/marts | Complete, 48 tests passing |
+| Gold, dims/facts/marts | Complete, 49 tests passing |
 | Power BI report | In progress |
 
 ## Running this project
@@ -87,7 +87,7 @@ naming, so no data is copied between layers.
 **Gold** — dimensional model. Five dimensions and two facts with hashed surrogate
 keys, plus two analytical marts. Items, payments and reviews are each pre-aggregated
 to order grain before joining, preventing the fan-out that would otherwise inflate
-revenue figures. 48 dbt tests cover uniqueness, referential integrity, accepted
+revenue figures. 49 dbt tests cover uniqueness, referential integrity, accepted
 values and composite grains.
 
 ### Design decisions
@@ -113,6 +113,11 @@ values and composite grains.
   or reviewed in a pull request. The theme JSON is versioned; the report itself
   will move to `.pbip` folder format so the semantic model and report definition
   become text.
+- **Lateness is judged at date grain.** The promised delivery is a calendar date,
+  so an order delivered on that date is on time. `is_late` is defined once in a
+  macro using the same date-level logic as the delivery bands, and a dbt test
+  fails if the two ever disagree. Fixing it moved 1,292 on-the-day orders from
+  late to on time.
 
 ### Lineage
 
