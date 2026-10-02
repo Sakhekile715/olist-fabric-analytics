@@ -233,3 +233,6 @@ profiles.yml
 # Power BI
 *.pbix.tmp
 ~$*
+
+# Power BI binaries cannot be diffed or reviewed; the report moves to .pbip
+*.pbix
