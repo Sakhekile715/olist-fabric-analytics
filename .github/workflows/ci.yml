@@ -9,7 +9,9 @@ permissions:
   contents: read
 
 env:
-  DBT_PROJECT_DIR: dbt/olist_analytics
+  # dbt reads both of these as --project-dir / --profiles-dir. Keep them absolute:
+  # the dbt steps also cd into the project, so a relative path would resolve twice.
+  DBT_PROJECT_DIR: ${{ github.workspace }}/dbt/olist_analytics
   DBT_PROFILES_DIR: ${{ github.workspace }}/.ci-profiles
   DBT_SEND_ANONYMOUS_USAGE_STATS: "false"
 
