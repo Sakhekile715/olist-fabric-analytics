@@ -1,0 +1,2 @@
+# Tooling used by CI on top of requirements.txt.
+sqlfluff==4.4.0

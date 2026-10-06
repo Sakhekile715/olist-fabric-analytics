@@ -2,7 +2,7 @@ WITH customers AS (
     SELECT * FROM {{ ref('stg_customers') }}
 ),
 
-orders as (
+orders AS (
     SELECT * FROM {{ ref('stg_orders') }}
 ),
 
