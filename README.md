@@ -109,10 +109,10 @@ values and composite grains.
   defined once in a macro and materialised on `fct_orders` alongside
   `delivery_bucket_sort`. `mart_delivery_performance` reads both from the fact
   rather than recomputing them, so the definitions cannot drift apart.
-- **Power BI report not versioned as `.pbix`.** The binary format can't be diffed
-  or reviewed in a pull request. The report itself
-  will move to `.pbip` folder format so the semantic model and report definition
-  become text.
+- **Report versioned as `.pbip`, not `.pbix`.** The binary `.pbix` format can't be
+  diffed or reviewed in a pull request, so the report lives in `powerbi/` as a PBIP
+  project: the semantic model is TMDL and the report definition is JSON, both plain
+  text. A `.pbix` with the data embedded is published as a release download instead.
 - **Lateness is judged at date grain.** The promised delivery is a calendar date,
   so an order delivered on that date is on time. `is_late` is defined once in a
   macro using the same date-level logic as the delivery bands, and a dbt test
@@ -128,6 +128,18 @@ values and composite grains.
 A Power BI semantic model over the Gold warehouse tables feeds a five-page report
 published to the Fabric workspace. Revenue is item price excluding freight, and the
 monthly charts show full months only (January 2017 to August 2018).
+
+**Viewing the dashboard**
+
+- **PDF**: all five pages in [`docs/olist-sales-dashboard.pdf`](docs/olist-sales-dashboard.pdf),
+  viewable in the browser.
+- **Interactive**: download `Olist Sales Dashboard.pbix` from the
+  [latest release](https://github.com/Sakhekile715/olist-fabric-analytics/releases/latest)
+  and open it in Power BI Desktop (free, Windows). The data is embedded, so no
+  Fabric access is needed.
+- **Source**: the PBIP project in [`powerbi/`](powerbi/), with tables, relationships
+  and DAX measures as TMDL and the report pages as JSON. It connects to the Fabric
+  warehouse, so it opens without data unless it can refresh against it.
 
 ![Executive overview page](docs/powerbi-executive-overview.png)
 

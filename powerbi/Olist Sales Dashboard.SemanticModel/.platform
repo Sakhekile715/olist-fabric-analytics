@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Olist Sales Dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a6c84d32-9616-43c3-a4e4-5d79bbb5e05d"
+  }
+}

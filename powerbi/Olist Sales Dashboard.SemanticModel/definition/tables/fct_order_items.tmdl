@@ -1,0 +1,114 @@
+table fct_order_items
+	lineageTag: 7db76752-b5c9-4842-b1ac-de048803af26
+
+	column order_item_key
+		dataType: string
+		isHidden
+		lineageTag: f10485f1-807d-48eb-bef2-7566034ca904
+		summarizeBy: none
+		sourceColumn: order_item_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_id
+		dataType: string
+		lineageTag: 6f12ffd9-e6d7-4b3c-b2b8-91a5a3ec4463
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column item_sequence
+		dataType: int64
+		formatString: 0
+		lineageTag: 15f0c0d7-1dba-4921-856e-24fa0cc0d83b
+		summarizeBy: sum
+		sourceColumn: item_sequence
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: string
+		isHidden
+		lineageTag: 9e3213d3-57e9-4020-956f-d2fd7b81ebfb
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_key
+		dataType: string
+		isHidden
+		lineageTag: 973e0ef2-1528-46ed-98d6-4212bcbfefea
+		summarizeBy: none
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_key
+		dataType: string
+		isHidden
+		lineageTag: bf1d288f-fba0-402d-a5f3-b4331e8f8b85
+		summarizeBy: none
+		sourceColumn: seller_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column purchase_date_key
+		dataType: string
+		isHidden
+		lineageTag: 308441eb-4cc3-4b1c-81a6-e902bf716dae
+		summarizeBy: none
+		sourceColumn: purchase_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_status
+		dataType: string
+		lineageTag: 6947dfc2-4fdf-47ef-ba6c-04f80cd22590
+		summarizeBy: none
+		sourceColumn: order_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column item_price
+		dataType: double
+		lineageTag: 30909a28-f1d1-41dd-85ab-7b9e7f05b57b
+		summarizeBy: sum
+		sourceColumn: item_price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column freight_value
+		dataType: double
+		lineageTag: 689746ee-2d06-4686-b344-c077c77c488d
+		summarizeBy: sum
+		sourceColumn: freight_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column item_total
+		dataType: double
+		lineageTag: e5d93903-f651-46dd-a32c-01e191ed0c5a
+		summarizeBy: sum
+		sourceColumn: item_total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fct_order_items = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("5s2g7hpbwc2e3pod2mrvoh62sa-crvzq5feotvuxojtpudzbpx4gu.datawarehouse.fabric.microsoft.com", "olist_dwh"),
+				    gold_fct_order_items = Source{[Schema="gold",Item="fct_order_items"]}[Data]
+				in
+				    gold_fct_order_items
+
+	annotation PBI_ResultType = Table
+

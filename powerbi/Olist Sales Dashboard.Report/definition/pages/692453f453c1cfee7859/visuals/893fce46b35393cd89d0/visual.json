@@ -1,0 +1,179 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "893fce46b35393cd89d0",
+  "position": {
+    "x": 40,
+    "y": 552,
+    "z": 2000,
+    "height": 1568,
+    "width": 1200,
+    "tabOrder": 2000
+  },
+  "visual": {
+    "visualType": "esriVisual",
+    "query": {
+      "queryState": {
+        "Location": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_geography"
+                    }
+                  },
+                  "Property": "state"
+                }
+              },
+              "queryRef": "dim_geography.state",
+              "nativeQueryRef": "state"
+            }
+          ]
+        },
+        "Size": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Total Revenue"
+                }
+              },
+              "queryRef": "_Measures.Total Revenue",
+              "nativeQueryRef": "Total Revenue",
+              "format": "\"R$\" #,0.00;-\"R$\" #,0.00;\"R$\" #,0.00"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "Total Revenue"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "mapTools": [
+        {
+          "properties": {
+            "basemaps": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "share": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "mapObject": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"portalUrl\":\"https://www.arcgis.com\",\"version\":\"2.4\",\"isAuthorNamedUser\":false,\"map\":{\"webmap\":{\"is3d\":false,\"itemData\":{\"operationalLayers\":[{\"id\":\"MyLayer\",\"visibility\":true,\"opacity\":1,\"minScale\":0,\"maxScale\":0,\"refreshInterval\":0,\"title\":\"state\",\"objectIdField\":\"objectId\",\"type\":\"DataLayer\",\"layerType\":\"ArcGISFeatureLayer\",\"popupEnabled\":true,\"disablePopup\":false,\"visible\":true,\"geometryType\":\"point\",\"source\":[{\"attributes\":{},\"geometry\":{\"x\":0,\"y\":0,\"type\":\"point\",\"spatialReference\":{\"latestWkid\":3857,\"wkid\":102100}}}],\"spatialReference\":{\"latestWkid\":3857,\"wkid\":102100},\"esriMaps\":{\"isTimeEnabled\":\"false\",\"clusterInfo\":{\"foreground\":\"#ffffff\",\"radius\":36},\"lastShareInfo\":null},\"timeInfo\":null,\"showLabels\":false,\"featureCollection\":{\"layers\":[{\"popupInfo\":{\"popupElements\":[{\"type\":\"fields\",\"fieldInfos\":[{\"fieldName\":\"dim_geography_state\",\"isEditable\":true,\"label\":\"state\",\"tooltip\":\"\",\"visible\":true},{\"fieldName\":\"expression/_Measures_Total_20Revenue\",\"isEditable\":true,\"label\":\"Total Revenue\",\"visible\":true},{\"fieldName\":\"ROW_ID\",\"format\":{\"digitSeparator\":true,\"places\":0},\"isEditable\":true,\"label\":\"ROW_ID\",\"tooltip\":\"\",\"visible\":true}]}],\"expressionInfos\":[{\"name\":\"_Measures_Total_20Revenue\",\"title\":\"Total Revenue\",\"expression\":\"// PowerBI number format: \\\"R$\\\" #,0.00;-\\\"R$\\\" #,0.00;\\\"R$\\\" #,0.00\\n\\nif (IsEmpty($feature[\\\"_Measures_Total_20Revenue\\\"]))\\n{\\n  return $feature[\\\"_Measures_Total_20Revenue\\\"] \\n}\\nif (Typeof($feature[\\\"_Measures_Total_20Revenue\\\"]) != \\\"Date\\\" && $feature[\\\"_Measures_Total_20Revenue\\\"] < 0)\\n{\\n  return \\\"-\\\" + \\\"R$\\\" + Text(Abs($feature[\\\"_Measures_Total_20Revenue\\\"]), \\\"#,###.00\\\") \\n} else if (Typeof($feature[\\\"_Measures_Total_20Revenue\\\"]) != \\\"Date\\\" && $feature[\\\"_Measures_Total_20Revenue\\\"] == 0)\\n{\\n  return \\\"R$\\\" + Text($feature[\\\"_Measures_Total_20Revenue\\\"], \\\"#,###.00\\\") \\n} else\\n{\\n  return \\\"R$\\\" + Text($feature[\\\"_Measures_Total_20Revenue\\\"], \\\"#,###.00\\\") \\n}\"}],\"fieldInfos\":[{\"fieldName\":\"dim_geography_state\",\"isEditable\":true,\"label\":\"state\",\"tooltip\":\"\",\"visible\":true},{\"fieldName\":\"_Measures_Total_20Revenue\",\"format\":{\"digitSeparator\":true,\"places\":2},\"isEditable\":true,\"label\":\"Total Revenue\",\"tooltip\":\"\",\"visible\":false},{\"fieldName\":\"expression/_Measures_Total_20Revenue\",\"isEditable\":true,\"label\":\"Total Revenue\",\"visible\":true},{\"fieldName\":\"ROW_ID\",\"format\":{\"digitSeparator\":true,\"places\":0},\"isEditable\":true,\"label\":\"ROW_ID\",\"tooltip\":\"\",\"visible\":true}],\"title\":\"\",\"actions\":[]},\"layerDefinition\":{\"objectIdField\":\"objectId\",\"fields\":[{\"alias\":\"objectId\",\"editable\":false,\"name\":\"objectId\",\"nullable\":false,\"type\":\"esriFieldTypeOID\"},{\"alias\":\"state\",\"editable\":true,\"length\":-1,\"name\":\"dim_geography_state\",\"nullable\":true,\"type\":\"esriFieldTypeString\"},{\"alias\":\"Total Revenue\",\"editable\":true,\"name\":\"_Measures_Total_20Revenue\",\"nullable\":true,\"type\":\"esriFieldTypeDouble\"},{\"alias\":\"ROW_ID\",\"editable\":true,\"name\":\"ROW_ID\",\"nullable\":true,\"type\":\"esriFieldTypeInteger\"}],\"geometryType\":\"point\",\"drawingInfo\":{\"renderer\":{\"authoringInfo\":{\"classificationMethod\":\"esriClassifyNaturalBreaks\",\"type\":\"classedSize\"},\"type\":\"classBreaks\",\"visualVariables\":[],\"classBreakInfos\":[{\"classMaxValue\":119073.33,\"symbol\":{\"type\":\"esriSMS\",\"color\":[45,106,79,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":3,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":8.4975,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":294335.28,\"symbol\":{\"type\":\"esriSMS\",\"color\":[45,106,79,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":24.5625,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":8.4975,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":750135.48,\"symbol\":{\"type\":\"esriSMS\",\"color\":[45,106,79,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":46.125,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":8.4975,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":1822307.36,\"symbol\":{\"type\":\"esriSMS\",\"color\":[45,106,79,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":67.6875,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":8.4975,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":5203062.29,\"symbol\":{\"type\":\"esriSMS\",\"color\":[45,106,79,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":89.25,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":8.4975,\"style\":\"esriSLSSolid\"}}}],\"defaultLabel\":\"Other\",\"defaultSymbol\":{\"type\":\"esriSMS\",\"color\":[128,128,128,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":3,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,64],\"width\":0.75,\"style\":\"esriSLSSolid\"}},\"field\":\"_Measures_Total_20Revenue\",\"minValue\":7829.43},\"labelingInfo\":[{\"labelExpressionInfo\":{\"expression\":\"// PowerBI number format: \\\"R$\\\" #,0.00;-\\\"R$\\\" #,0.00;\\\"R$\\\" #,0.00\\n\\nif (IsEmpty($feature[\\\"_Measures_Total_20Revenue\\\"]))\\n{\\n  return $feature[\\\"_Measures_Total_20Revenue\\\"] \\n}\\nif (Typeof($feature[\\\"_Measures_Total_20Revenue\\\"]) != \\\"Date\\\" && $feature[\\\"_Measures_Total_20Revenue\\\"] < 0)\\n{\\n  return \\\"-\\\" + \\\"R$\\\" + Text(Abs($feature[\\\"_Measures_Total_20Revenue\\\"]), \\\"#,###.00\\\") \\n} else if (Typeof($feature[\\\"_Measures_Total_20Revenue\\\"]) != \\\"Date\\\" && $feature[\\\"_Measures_Total_20Revenue\\\"] == 0)\\n{\\n  return \\\"R$\\\" + Text($feature[\\\"_Measures_Total_20Revenue\\\"], \\\"#,###.00\\\") \\n} else\\n{\\n  return \\\"R$\\\" + Text($feature[\\\"_Measures_Total_20Revenue\\\"], \\\"#,###.00\\\") \\n}\"},\"labelPlacement\":\"esriServerPointLabelPlacementCenterLeft\",\"labelPosition\":\"curved\",\"repeatLabel\":true,\"symbol\":{\"type\":\"esriTS\",\"color\":[0,0,0,255],\"font\":{\"family\":\"Arial Unicode MS\",\"size\":29},\"horizontalAlignment\":\"center\",\"kerning\":true,\"rotated\":false,\"text\":\"\",\"verticalAlignment\":\"baseline\",\"xoffset\":-18.75,\"yoffset\":18.75,\"angle\":0,\"lineWidth\":192,\"lineHeight\":1},\"where\":\"\"}],\"transparency\":0},\"featureReduction\":{\"type\":\"cluster\",\"clusterRadius\":36,\"clusterMinSize\":16.5,\"clusterMaxSize\":34,\"disablePopup\":false,\"popupInfo\":{\"popupElements\":[{\"type\":\"text\",\"text\":\"This cluster represents <b>{cluster_count}</b> features.\"},{\"type\":\"text\",\"text\":\"The average value of <b>Total Revenue</b> within this cluster is <b>{cluster_avg__Measures_Total_20Revenue}</b>.\"}],\"description\":\"This cluster represents <b>{cluster_count}</b> features.\",\"expressionInfos\":[],\"fieldInfos\":[{\"fieldName\":\"cluster_count\",\"format\":{\"digitSeparator\":true,\"places\":0},\"isEditable\":true,\"label\":\"Number of features\",\"visible\":true},{\"fieldName\":\"cluster_avg__Measures_Total_20Revenue\",\"format\":{\"digitSeparator\":true,\"places\":2},\"isEditable\":true,\"label\":\"Average Total Revenue\",\"visible\":true}],\"title\":\"Cluster summary\"},\"drawingInfo\":{\"renderer\":{\"authoringInfo\":{\"classificationMethod\":\"esriClassifyNaturalBreaks\",\"isAutoGenerated\":true,\"type\":\"classedSize\"},\"type\":\"classBreaks\",\"visualVariables\":[],\"classBreakInfos\":[{\"classMaxValue\":119073.33,\"symbol\":{\"type\":\"esriSMS\",\"color\":[45,106,79,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":3,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":8.4975,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":294335.28,\"symbol\":{\"type\":\"esriSMS\",\"color\":[45,106,79,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":24.5625,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":8.4975,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":750135.48,\"symbol\":{\"type\":\"esriSMS\",\"color\":[45,106,79,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":46.125,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":8.4975,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":1822307.36,\"symbol\":{\"type\":\"esriSMS\",\"color\":[45,106,79,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":67.6875,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":8.4975,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":5203062.29,\"symbol\":{\"type\":\"esriSMS\",\"color\":[45,106,79,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":89.25,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":8.4975,\"style\":\"esriSLSSolid\"}}}],\"defaultLabel\":\"Other\",\"defaultSymbol\":{\"type\":\"esriSMS\",\"color\":[128,128,128,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":3,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,64],\"width\":0.75,\"style\":\"esriSLSSolid\"}},\"field\":\"cluster_avg__Measures_Total_20Revenue\",\"minValue\":7829.43},\"labelingInfo\":[{\"deconflictionStrategy\":\"none\",\"labelExpressionInfo\":{\"expression\":\"$feature[\\\"cluster_count\\\"];\\n                var value = $feature[\\\"cluster_count\\\"];\\n                var num = Count(Text(Round(value)));\\n                var label = When(\\n                  num < 4, Text(value, \\\"#.#\\\"),\\n                  num == 4, Text(value / Pow(10, 3), \\\"#.0k\\\"),\\n                  num <= 6, Text(value / Pow(10, 3), \\\"#k\\\"),\\n                  num == 7, Text(value / Pow(10, 6), \\\"#.0m\\\"),\\n                  num > 7, Text(value / Pow(10, 6), \\\"#m\\\"),\\n                  Text(value, \\\"#,###\\\")\\n                );\\n                return label;\"},\"labelPlacement\":\"esriServerPointLabelPlacementCenterCenter\",\"labelPosition\":\"curved\",\"repeatLabel\":true,\"symbol\":{\"type\":\"esriTS\",\"color\":[255,255,255,255],\"font\":{\"family\":\"Noto Sans\",\"size\":9},\"horizontalAlignment\":\"center\",\"kerning\":true,\"rotated\":false,\"text\":\"\",\"verticalAlignment\":\"baseline\",\"xoffset\":0,\"yoffset\":0,\"angle\":0,\"lineWidth\":192,\"lineHeight\":1}}]},\"showLabels\":true,\"fields\":[{\"isAutoGenerated\":true,\"name\":\"cluster_count\",\"alias\":\"cluster_count\",\"statisticType\":\"count\"},{\"isAutoGenerated\":true,\"name\":\"cluster_avg__Measures_Total_20Revenue\",\"onStatisticField\":\"_Measures_Total_20Revenue\",\"statisticType\":\"avg\"}]},\"locationProvider\":{\"type\":\"cachedgeocode\",\"sourceCountry\":\"BR\",\"targetSR\":102100,\"lookupFields\":[{\"lookupField\":\"SingleLine\",\"outField\":\"dim_geography_state\"}],\"geocodeServiceUrl\":\"https://utility.arcgis.com/usrsvcs/appservices/L7zl5sI0W1hBHWRI/rest/services/World/GeocodeServer\"},\"minScale\":0,\"maxScale\":0,\"definitionExpression\":null,\"templates\":[{\"name\":\"New Feature\",\"description\":\"\",\"prototype\":{\"attributes\":{\"dim_geography_state\":null,\"_Measures_Total_20Revenue\":null,\"ROW_ID\":null}}}],\"elevationInfo\":null,\"name\":\"state\",\"type\":\"DataLayer\",\"queryParameters\":{\"tableId\":\"\"}},\"featureSet\":{\"features\":[{\"attributes\":{},\"geometry\":{\"x\":0,\"y\":0,\"type\":\"point\",\"spatialReference\":{\"latestWkid\":3857,\"wkid\":102100}}}]}}]}}],\"tables\":[],\"baseMap\":{\"baseMapLayers\":[{\"id\":\"VectorTile_1970\",\"opacity\":1,\"title\":\"Light Gray Base\",\"visibility\":true,\"layerType\":\"VectorTileLayer\",\"styleUrl\":\"https://cdn.arcgis.com/sharing/rest/content/items/291da5eab3a0412593b66d384379f89f/resources/styles/root.json\"},{\"id\":\"VectorTile_7117\",\"opacity\":1,\"title\":\"Light Gray Reference\",\"visibility\":true,\"layerType\":\"VectorTileLayer\",\"styleUrl\":\"https://cdn.arcgis.com/sharing/rest/content/items/1768e8369a214dfab4e2167d5c5f2454/resources/styles/root.json\",\"isReference\":true}],\"title\":\"Light Gray Canvas\"},\"version\":\"2.26\",\"authoringApp\":\"ArcGIS for Power BI\",\"authoringAppVersion\":\"2026.2.992\",\"bookmarks\":[],\"initialState\":{\"viewpoint\":{\"targetGeometry\":{\"spatialReference\":{\"latestWkid\":3857,\"wkid\":102100},\"xmin\":-8891100.77491083,\"ymin\":-5316434.756950604,\"xmax\":-3187063.9761593533,\"ymax\":1889436.7735476156}}}}},\"webmapExtensions\":{\"format\":2}},\"embedCheckPassed\":false}'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "geometryCache": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"key\":\"cachedgeocode@@br\",\"compressionMethod\":\"pako\",\"data\":\"H4sIAAAAAAAAA3WVS2/bWAyF/4vWKXH55vW6m9nOph0MZuGkapA2TgzbwGAQ5L8P9Ugh1LQWhnEhfTqHPKTehvNxf3naP/85fh9P48vDOOzehuf9ZTxfvvx8+jbsONTvhn/n/9gIW3u/Gx7H18N4OT2N52H3d97/+pCQ15c/Pg+74XQeft3w30T7Ouw+aWdFUlDpejf8lScs3ho2CGzRp+v9/e430uGxIEl3ThkgnZfnFhy1nuoMohO16bJr3vFUKXPRTgLOk88ZFYyICkTGEwmvSeeHimTYLRDImTfKGFXIBBqx3cCdflRGo5mpQGdcdRllwVIpkV8zHl8rSUo8maMQWiAYrWt3yHO9Ufb7faXGRKQF9FiLsuLSaWgDMu03zH37Xgljak4Bqtw2tUL3zkypDm0+lmveWOVLlFy6gZv3bSryml8T6LdaeazkCSWxg4X0jVtSYcEA6xHzMRchGyt5RPkIQVZ/sbsOQc9asgOb4MyLa95DyZvvFxAV3+hTc8+k5dtmea3AHavmZu/ctYMYrsIkjYaDoi78KnGHEtWkabRM+9qJD2VsjBC8pKdpoey+Mpo+0fNBXNLabeF5FzeCjDXOx4XTw6XgGWXwLbeOddzGWJR7M0hqv7WMqtgZNmVvoD0+Epe7IzTAJcdiuorCHZ8qpx4sxhk5tI2yoNyYBkwis08qtsdLhWv5ZFYofcZCslzATQGR5khXs7B/LknuzSVbsG7WNSLYjLtEjr4V3byU64ijoeAU0JWBrJZjmz+0tLewV5FyO2gOI7jHdt5xGnjNOVNcTBaNPJcDhRZpBNRRtjnLZuYcMHRteKtoh4Ln2L2FgKmv0rIZ3Xtu87m7ZS725SrykIwnUCqZSRkP4gbWlkR0KZbQqfrSWQYsFMEQF3eUS7hnVHHpaxav0FR96VKSBGf1TX+FIefa0h4SfwzkP+//AzL6TVdeCAAA\"}'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Revenue by Customer State'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "35D"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

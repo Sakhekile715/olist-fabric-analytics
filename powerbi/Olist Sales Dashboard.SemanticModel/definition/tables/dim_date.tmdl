@@ -1,0 +1,130 @@
+table dim_date
+	lineageTag: d3139782-7841-4643-98a9-df8730bb4862
+	dataCategory: Time
+
+	column date_key
+		dataType: string
+		lineageTag: 9d3bfee9-fc3d-4f54-b6df-f3c437af9e49
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column full_date
+		dataType: dateTime
+		isKey
+		formatString: Short Date
+		lineageTag: 3cbe255c-b21e-43e9-b332-55903db9399a
+		summarizeBy: none
+		sourceColumn: full_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: 93c91997-98bb-4867-9afb-cf206470ea2e
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: int64
+		formatString: 0
+		lineageTag: 1c0bfc71-74ca-4139-8601-6a2e36585cfb
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: 4d41dd0f-5265-41f4-9c5e-e54a668589f1
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: int64
+		formatString: 0
+		lineageTag: 5a47fdfe-bb99-4428-8cf9-90fbfef85230
+		summarizeBy: none
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_month
+		dataType: int64
+		formatString: 0
+		lineageTag: ff5062be-983b-43e8-9a45-661ced0c3cc6
+		summarizeBy: none
+		sourceColumn: day_of_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_name
+		dataType: string
+		lineageTag: 3990584d-ec72-4c85-b2b8-e770398bb6af
+		summarizeBy: none
+		sourceColumn: day_name
+		sortByColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: int64
+		formatString: 0
+		lineageTag: dc4c1352-e90a-421c-92c1-6bf74b449ab8
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_year
+		dataType: string
+		lineageTag: 5bbd85fc-7dde-45ec-804a-4b8b618f3961
+		summarizeBy: none
+		sourceColumn: month_year
+		sortByColumn: year_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0fce010c-f65f-4857-b78d-02891a8b4976
+		summarizeBy: none
+		sourceColumn: year_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 60780ab3-7107-46b9-ac33-50f070680c94
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("5s2g7hpbwc2e3pod2mrvoh62sa-crvzq5feotvuxojtpudzbpx4gu.datawarehouse.fabric.microsoft.com", "olist_dwh"),
+				    gold_dim_date = Source{[Schema="gold",Item="dim_date"]}[Data],
+				    #"Added month_year" = Table.AddColumn(gold_dim_date, "month_year", each Date.ToText(Date.From([full_date]), [Format="MMM yyyy", Culture="en-US"]), type text),
+				    #"Added year_month" = Table.AddColumn(#"Added month_year", "year_month", each [year] * 100 + [month], Int64.Type),
+				    #"Added day_of_week" = Table.AddColumn(#"Added year_month", "day_of_week", each Date.DayOfWeek([full_date], Day.Monday) + 1, Int64.Type)
+				in
+				    #"Added day_of_week"
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,92 @@
+table dim_product
+	lineageTag: deff3e69-9788-450f-9129-f0fdddb8eb6d
+
+	column product_key
+		dataType: string
+		lineageTag: 12dec97a-86c5-4857-903f-65fd92cd5547
+		summarizeBy: none
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		lineageTag: db36ef0f-6733-4d28-a37c-3ec0b547ec98
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		lineageTag: b747159f-69d2-47cd-9a83-7dc5f17dd862
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column category_name_pt
+		dataType: string
+		lineageTag: 054a8b52-8d59-4274-aa0f-c36cc92a3481
+		summarizeBy: none
+		sourceColumn: category_name_pt
+
+		annotation SummarizationSetBy = Automatic
+
+	column weight_g
+		dataType: int64
+		formatString: 0
+		lineageTag: 2f8160e1-624e-497b-a945-fab27a9e634b
+		summarizeBy: none
+		sourceColumn: weight_g
+
+		annotation SummarizationSetBy = Automatic
+
+	column length_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: ef085332-053b-4abb-a4ff-f8625c210980
+		summarizeBy: none
+		sourceColumn: length_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column height_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 9576cdd3-8caa-420c-8613-8e199e00e286
+		summarizeBy: none
+		sourceColumn: height_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column width_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 541cb85a-1de6-45c7-84ab-537c210d2294
+		summarizeBy: none
+		sourceColumn: width_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column photo_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 2bc12d78-0798-4e61-8c5b-a1c5c1c0ba10
+		summarizeBy: none
+		sourceColumn: photo_count
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_product = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("5s2g7hpbwc2e3pod2mrvoh62sa-crvzq5feotvuxojtpudzbpx4gu.datawarehouse.fabric.microsoft.com", "olist_dwh"),
+				    gold_dim_product = Source{[Schema="gold",Item="dim_product"]}[Data],
+				    #"Tidied category names" = Table.TransformColumns(gold_dim_product, {{"category", each Text.Proper(Text.Replace(_, "_", " ")), type text}})
+				in
+				    #"Tidied category names"
+
+	annotation PBI_ResultType = Table
+
