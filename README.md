@@ -8,7 +8,7 @@ End-to-end analytics engineering pipeline on Microsoft Fabric - PySpark ingestio
 | Bronze ingestion (PySpark) | Complete |
 | Silver, dbt staging | Complete |
 | Gold, dims/facts/marts | Complete, 49 tests passing |
-| Power BI report | In progress |
+| Power BI report | Published to Fabric workspace (Import mode) |
 
 ## Running this project
 
@@ -110,7 +110,7 @@ values and composite grains.
   `delivery_bucket_sort`. `mart_delivery_performance` reads both from the fact
   rather than recomputing them, so the definitions cannot drift apart.
 - **Power BI report not versioned as `.pbix`.** The binary format can't be diffed
-  or reviewed in a pull request. The theme JSON is versioned; the report itself
+  or reviewed in a pull request. The report itself
   will move to `.pbip` folder format so the semantic model and report definition
   become text.
 - **Lateness is judged at date grain.** The promised delivery is a calendar date,
@@ -122,3 +122,68 @@ values and composite grains.
 ### Lineage
 
 ![dbt lineage graph](docs/dbt-lineage.png)
+
+## Power BI Report
+
+A Power BI semantic model over the Gold warehouse tables feeds a five-page report
+published to the Fabric workspace. Revenue is item price excluding freight, and the
+monthly charts show full months only (January 2017 to August 2018).
+
+![Executive overview page](docs/powerbi-executive-overview.png)
+
+**Pages**
+
+- **Executive overview** — headline KPIs (revenue, orders, average order value,
+  delivery time, on-time rate, review score), monthly revenue, top ten categories
+  by revenue and a customer map.
+- **Sales trends** — January–August 2018 revenue against the same months of 2017,
+  monthly orders, monthly average order value and revenue by day of week. Monthly
+  charts are limited to full months: 2016 holds only 329 orders across three
+  non-contiguous months, and the collection stops mid-September 2018.
+- **Delivery & satisfaction** — the delivery finding above as a report page:
+  average review score by delivery band, on time versus late, monthly on-time rate
+  and the review score distribution.
+- **Category performance** — revenue against review score for the top 20
+  categories, the lowest-scoring categories, and a scorecard with revenue share,
+  spend per order, freight share, review score and on-time rate.
+- **Regional performance** — revenue by customer state on a map, a state
+  scorecard, the ten slowest states by delivery time and the top ten seller states
+  by revenue.
+
+![Delivery and satisfaction page](docs/powerbi-delivery-satisfaction.png)
+
+**Semantic model.** Two fact tables, `fct_orders` (order grain) and
+`fct_order_items` (item grain), share the date and customer dimensions, and
+products and sellers attach to items. `dim_geography` joins to `dim_customer` on
+`zip_code`, which drives the map visuals. Measures live in a dedicated `Measures`
+table.
+
+![Semantic model relationships](docs/powerbi-model.png)
+
+<details>
+<summary>More report pages and workspace lineage</summary>
+
+![Sales trends page](docs/powerbi-sales-trends.png)
+
+![Category performance page](docs/powerbi-category-performance.png)
+
+![Regional performance page](docs/powerbi-regional-performance.png)
+
+![Fabric workspace lineage](docs/powerbi-workspace-lineage.png)
+
+</details>
+
+### Design decisions
+
+- **Import mode, not DirectLake.** Olist is a static historical dataset, so
+  DirectLake's main advantage — reading fresh data straight from OneLake without a
+  refresh — doesn't apply. Import also makes the report self-contained: the data
+  travels with the model instead of depending on running Fabric capacity, which
+  matters on a trial. For changing data in production I would use DirectLake to
+  avoid refresh schedules and duplicated storage.
+- **Two review-score measures.** `Avg Review Score` is order-level (4.09).
+  `Avg Review Score (Items)` is item-weighted (4.03) and drives the category page,
+  where each category is scored on the orders it appears in. The pages state which
+  one they use.
+- **Revenue excludes freight.** Revenue is item price only, as stated on the
+  overview page; freight is reported separately as a share of revenue.
