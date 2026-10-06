@@ -1,0 +1,158 @@
+table _Measures
+	lineageTag: 807434ff-6d79-4b6d-9f4d-9707219b5285
+
+	/// Sum of item price across all order items. Excludes freight.
+	measure 'Total Revenue' = SUM ( fct_order_items[item_price] )
+		formatString: \R\$ #,0.00
+		lineageTag: dfde1044-027c-4b0f-9919-3a4dfe6a5e66
+
+	/// Sum of freight charged across all order items.
+	measure 'Total Freight' = SUM ( fct_order_items[freight_value] )
+		formatString: \R\$ #,0.00
+		lineageTag: 8836f217-fc64-410b-a21b-c524cb07abf6
+
+	/// All orders in fct_orders, including orders with no items.
+	measure 'Total Orders' = COUNTROWS ( fct_orders )
+		formatString: #,0
+		lineageTag: 05294c24-14b6-4118-84b0-4ac0042d7996
+
+	/// Distinct orders that have at least one item. Same grain as Total Revenue.
+	measure 'Orders (Items)' = DISTINCTCOUNT ( fct_order_items[order_id] )
+		formatString: #,0
+		lineageTag: c71deb32-79d0-43ef-81bd-12ebede5e920
+
+	/// Revenue per order with items. Numerator and denominator both come from fct_order_items.
+	measure 'Avg Order Value' = DIVIDE ( [Total Revenue], [Orders (Items)] )
+		formatString: \R\$ #,0.00
+		lineageTag: 81d4d724-731c-4d05-bb1c-18905da1b3e3
+
+	/// Average review score per order (1-5).
+	measure 'Avg Review Score' = AVERAGE ( fct_orders[review_score] )
+		formatString: 0.00
+		lineageTag: 55571252-3090-4e89-8fa7-ab809240bf57
+
+	/// Average days from purchase to delivery.
+	measure 'Avg Days to Deliver' = AVERAGE ( fct_orders[days_to_deliver] )
+		formatString: 0.0 \d\a\y\s
+		lineageTag: 95242958-af07-421d-afc3-e016bfb5de55
+
+	/// Orders with a known delivery outcome.
+	measure 'Delivered Orders' =
+			CALCULATE (
+			    COUNTROWS ( fct_orders ),
+			    NOT ISBLANK ( fct_orders[is_late] )
+			)
+		formatString: #,0
+		lineageTag: 6dd6cc4a-fefb-4995-9f3f-9d0a38ba1baa
+
+	/// Orders delivered after the estimated date.
+	measure 'Late Orders' =
+			CALCULATE (
+			    COUNTROWS ( fct_orders ),
+			    fct_orders[is_late] = 1
+			)
+		formatString: #,0
+		lineageTag: 9993cf54-e3ca-4a5f-a035-e740710db922
+
+	/// Share of delivered orders that arrived on or before the estimated date.
+	measure 'On-Time Delivery %' =
+			VAR OnTime =
+			    CALCULATE (
+			        COUNTROWS ( fct_orders ),
+			        fct_orders[is_late] = 0,
+			        NOT ISBLANK ( fct_orders[is_late] )
+			    )
+			RETURN
+			    DIVIDE ( OnTime, [Delivered Orders] )
+		formatString: 0.0%
+		lineageTag: 387e66cb-5c8d-48d1-abfc-33c14559748b
+
+	measure 'Revenue YTD' = TOTALYTD ( [Total Revenue], dim_date[full_date] )
+		formatString: \R\$ #,0.00
+		lineageTag: 3ffb35fc-2548-44fb-bd89-8559c3c4d689
+
+	measure 'Revenue PY' = CALCULATE ( [Total Revenue], SAMEPERIODLASTYEAR ( dim_date[full_date] ) )
+		formatString: \R\$ #,0.00
+		lineageTag: 915124a8-e853-48fc-af02-cfbb262ae179
+
+	measure 'Revenue YoY %' = DIVIDE ( [Total Revenue] - [Revenue PY], [Revenue PY] )
+		formatString: 0.0%
+		lineageTag: b710ab98-31f3-43e5-a444-85daacfcea71
+
+	/// Share of reviewed orders scoring 1 or 2.
+	measure 'Negative Review %' =
+			DIVIDE (
+			    CALCULATE ( COUNTROWS ( fct_orders ), fct_orders[review_score] <= 2 ),
+			    CALCULATE ( COUNTROWS ( fct_orders ), NOT ISBLANK ( fct_orders[review_score] ) )
+			)
+		formatString: 0.0%
+		lineageTag: 2f214ea5-025b-468f-9147-b05b2224ca5d
+
+	/// Revenue for January to August 2018, the last full months in the data.
+	measure 'Revenue 2018 (Jan-Aug)' = CALCULATE ( [Total Revenue], dim_date[year] = 2018, dim_date[month] <= 8 )
+		formatString: \R\$ #,0.00
+		lineageTag: 8b1e9f34-08ab-4d93-86f9-23467b605b7e
+
+	/// Revenue for January to August 2017, the same months a year earlier.
+	measure 'Revenue 2017 (Jan-Aug)' = CALCULATE ( [Total Revenue], dim_date[year] = 2017, dim_date[month] <= 8 )
+		formatString: \R\$ #,0.00
+		lineageTag: 8a223cea-80b1-407b-866a-ef9b0726fb2b
+
+	/// Like-for-like growth: Jan-Aug 2018 against Jan-Aug 2017.
+	measure 'Revenue Growth % (Jan-Aug)' = DIVIDE ( [Revenue 2018 (Jan-Aug)] - [Revenue 2017 (Jan-Aug)], [Revenue 2017 (Jan-Aug)] )
+		formatString: 0.0%
+		lineageTag: 1fcc2505-5c6c-4948-815d-3179fdc2312f
+
+	/// Freight charged as a share of item revenue.
+	measure 'Freight % of Revenue' = DIVIDE ( [Total Freight], [Total Revenue] )
+		formatString: 0.0%
+		lineageTag: aaa79bf0-6968-4b88-8969-a6440f1ab645
+
+	/// Share of revenue within the current slicer and filter selection.
+	measure 'Revenue Share %' = DIVIDE ( [Total Revenue], CALCULATE ( [Total Revenue], ALLSELECTED () ) )
+		formatString: 0.0%
+		lineageTag: 8412d1df-059f-4649-a345-aa926e0789ca
+
+	/// Review score weighted by items. fct_order_items has no review column, so each item takes its order's score.
+	measure 'Avg Review Score (Items)' =
+			AVERAGEX (
+			    fct_order_items,
+			    LOOKUPVALUE ( fct_orders[review_score], fct_orders[order_id], fct_order_items[order_id] )
+			)
+		formatString: 0.00
+		lineageTag: 28e9a60e-9c16-4428-818a-e3d1ad21ec2d
+
+	/// On-time share weighted by items. Each item takes its order's late flag.
+	measure 'On-Time Delivery % (Items)' =
+			VAR ItemStatus =
+			    SELECTCOLUMNS (
+			        fct_order_items,
+			        "@IsLate", LOOKUPVALUE ( fct_orders[is_late], fct_orders[order_id], fct_order_items[order_id] )
+			    )
+			VAR Delivered = COUNTROWS ( FILTER ( ItemStatus, NOT ISBLANK ( [@IsLate] ) ) )
+			VAR LateItems = COUNTROWS ( FILTER ( ItemStatus, [@IsLate] = 1 ) )
+			RETURN
+			    DIVIDE ( Delivered - LateItems, Delivered )
+		formatString: 0.0%
+		lineageTag: b3341378-9130-4cf9-9fcd-ad7539125023
+
+	column placeholder
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 6dbbc375-fe16-41ee-a9bc-2edaa5f4322d
+		summarizeBy: none
+		sourceColumn: placeholder
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [placeholder = Int64.Type], {})
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

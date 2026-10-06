@@ -1,0 +1,376 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "0f28fdad38b26666fd93",
+  "position": {
+    "x": 2235.1367781155013,
+    "y": 551.48936170212767,
+    "z": 11000,
+    "height": 1555.258358662614,
+    "width": 1564.0121580547113,
+    "tabOrder": 11000
+  },
+  "visual": {
+    "visualType": "esriVisual",
+    "query": {
+      "queryState": {
+        "Latitude": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_geography"
+                    }
+                  },
+                  "Property": "latitude"
+                }
+              },
+              "queryRef": "dim_geography.latitude",
+              "nativeQueryRef": "latitude"
+            }
+          ]
+        },
+        "Location": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_geography"
+                    }
+                  },
+                  "Property": "state"
+                }
+              },
+              "queryRef": "dim_geography.state",
+              "nativeQueryRef": "state"
+            }
+          ]
+        },
+        "Longitude": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_geography"
+                    }
+                  },
+                  "Property": "longitude"
+                }
+              },
+              "queryRef": "dim_geography.longitude",
+              "nativeQueryRef": "longitude"
+            }
+          ]
+        },
+        "Size": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "dim_customer"
+                        }
+                      },
+                      "Property": "customer_id"
+                    }
+                  },
+                  "Function": 5
+                }
+              },
+              "queryRef": "CountNonNull(dim_customer.customer_id)",
+              "nativeQueryRef": "Count of customer_id"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Aggregation": {
+                "Expression": {
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "dim_customer"
+                      }
+                    },
+                    "Property": "customer_id"
+                  }
+                },
+                "Function": 5
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "mapTools": [
+        {
+          "properties": {
+            "basemaps": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "share": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "mapObject": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"portalUrl\":\"https://www.arcgis.com\",\"version\":\"2.4\",\"isAuthorNamedUser\":false,\"map\":{\"webmap\":{\"is3d\":false,\"itemData\":{\"operationalLayers\":[{\"id\":\"MyLayer\",\"visibility\":true,\"opacity\":1,\"minScale\":0,\"maxScale\":0,\"refreshInterval\":0,\"title\":\"Coordinates\",\"objectIdField\":\"objectId\",\"type\":\"DataLayer\",\"layerType\":\"ArcGISFeatureLayer\",\"popupEnabled\":true,\"disablePopup\":false,\"visible\":true,\"geometryType\":\"point\",\"source\":[{\"attributes\":{},\"geometry\":{\"x\":0,\"y\":0,\"type\":\"point\",\"spatialReference\":{\"latestWkid\":3857,\"wkid\":102100}}}],\"spatialReference\":{\"latestWkid\":3857,\"wkid\":102100},\"esriMaps\":{\"isTimeEnabled\":\"false\",\"clusterInfo\":{\"foreground\":\"#ffffff\",\"radius\":20},\"lastShareInfo\":null},\"timeInfo\":null,\"showLabels\":true,\"featureCollection\":{\"layers\":[{\"popupInfo\":{\"popupElements\":[{\"type\":\"fields\",\"fieldInfos\":[{\"fieldName\":\"dim_geography_state\",\"isEditable\":true,\"label\":\"state\",\"tooltip\":\"\",\"visible\":true},{\"fieldName\":\"expression/dim_geography_latitude\",\"isEditable\":true,\"label\":\"latitude\",\"visible\":true},{\"fieldName\":\"expression/dim_geography_longitude\",\"isEditable\":true,\"label\":\"longitude\",\"visible\":true},{\"fieldName\":\"expression/CountNonNull_dim_customer_customer_id_\",\"isEditable\":true,\"label\":\"Count of customer_id\",\"visible\":true},{\"fieldName\":\"ROW_ID\",\"format\":{\"digitSeparator\":true,\"places\":0},\"isEditable\":true,\"label\":\"ROW_ID\",\"tooltip\":\"\",\"visible\":true}]}],\"expressionInfos\":[{\"name\":\"dim_geography_latitude\",\"title\":\"latitude\",\"expression\":\"// PowerBI number format: #,0.00\\n\\nif (IsEmpty($feature[\\\"dim_geography_latitude\\\"]))\\n{\\n  return $feature[\\\"dim_geography_latitude\\\"] \\n}\\nText($feature[\\\"dim_geography_latitude\\\"], \\\"#,###.00\\\")\"},{\"name\":\"dim_geography_longitude\",\"title\":\"longitude\",\"expression\":\"// PowerBI number format: #,0.00\\n\\nif (IsEmpty($feature[\\\"dim_geography_longitude\\\"]))\\n{\\n  return $feature[\\\"dim_geography_longitude\\\"] \\n}\\nText($feature[\\\"dim_geography_longitude\\\"], \\\"#,###.00\\\")\"},{\"name\":\"CountNonNull_dim_customer_customer_id_\",\"title\":\"Count of customer_id\",\"expression\":\"// PowerBI number format: g\\n\\nif (IsEmpty($feature[\\\"CountNonNull_dim_customer_customer_id_\\\"]))\\n{\\n  return $feature[\\\"CountNonNull_dim_customer_customer_id_\\\"] \\n}\\nIIF(Text($feature[\\\"CountNonNull_dim_customer_customer_id_\\\"], \\\"#\\\") == \\\"0\\\" || Text($feature[\\\"CountNonNull_dim_customer_customer_id_\\\"], \\\"#\\\") == \\\"-0\\\", \\\"\\\", Text($feature[\\\"CountNonNull_dim_customer_customer_id_\\\"], \\\"#\\\"))\"}],\"fieldInfos\":[{\"fieldName\":\"dim_geography_state\",\"isEditable\":true,\"label\":\"state\",\"tooltip\":\"\",\"visible\":true},{\"fieldName\":\"dim_geography_latitude\",\"format\":{\"digitSeparator\":true,\"places\":2},\"isEditable\":true,\"label\":\"latitude\",\"tooltip\":\"\",\"visible\":false},{\"fieldName\":\"expression/dim_geography_latitude\",\"isEditable\":true,\"label\":\"latitude\",\"visible\":true},{\"fieldName\":\"dim_geography_longitude\",\"format\":{\"digitSeparator\":true,\"places\":2},\"isEditable\":true,\"label\":\"longitude\",\"tooltip\":\"\",\"visible\":false},{\"fieldName\":\"expression/dim_geography_longitude\",\"isEditable\":true,\"label\":\"longitude\",\"visible\":true},{\"fieldName\":\"CountNonNull_dim_customer_customer_id_\",\"format\":{\"digitSeparator\":true,\"places\":0},\"isEditable\":true,\"label\":\"Count of customer_id\",\"tooltip\":\"\",\"visible\":false},{\"fieldName\":\"expression/CountNonNull_dim_customer_customer_id_\",\"isEditable\":true,\"label\":\"Count of customer_id\",\"visible\":true},{\"fieldName\":\"ROW_ID\",\"format\":{\"digitSeparator\":true,\"places\":0},\"isEditable\":true,\"label\":\"ROW_ID\",\"tooltip\":\"\",\"visible\":true}],\"title\":\"\",\"actions\":[]},\"layerDefinition\":{\"objectIdField\":\"objectId\",\"fields\":[{\"alias\":\"objectId\",\"editable\":false,\"name\":\"objectId\",\"nullable\":false,\"type\":\"esriFieldTypeOID\"},{\"alias\":\"state\",\"editable\":true,\"length\":-1,\"name\":\"dim_geography_state\",\"nullable\":true,\"type\":\"esriFieldTypeString\"},{\"alias\":\"latitude\",\"editable\":true,\"name\":\"dim_geography_latitude\",\"nullable\":true,\"type\":\"esriFieldTypeDouble\"},{\"alias\":\"longitude\",\"editable\":true,\"name\":\"dim_geography_longitude\",\"nullable\":true,\"type\":\"esriFieldTypeDouble\"},{\"alias\":\"Count of customer_id\",\"editable\":true,\"name\":\"CountNonNull_dim_customer_customer_id_\",\"nullable\":true,\"type\":\"esriFieldTypeInteger\"},{\"alias\":\"ROW_ID\",\"editable\":true,\"name\":\"ROW_ID\",\"nullable\":true,\"type\":\"esriFieldTypeInteger\"}],\"geometryType\":\"point\",\"drawingInfo\":{\"renderer\":{\"authoringInfo\":{\"classificationMethod\":\"esriClassifyNaturalBreaks\",\"numClasses\":10,\"type\":\"classedSize\"},\"type\":\"classBreaks\",\"visualVariables\":[],\"classBreakInfos\":[{\"classMaxValue\":4,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":0.75,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":9,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":13.166666666666666,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":15,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":25.583333333333332,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":23,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":38,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":32,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":50.416666666666664,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":42,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":62.83333333333333,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":57,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":75.25,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":75,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":87.66666666666666,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":92,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":100.08333333333333,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":136,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":112.5,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}}],\"defaultLabel\":\"Other\",\"defaultSymbol\":{\"type\":\"esriSMS\",\"color\":[128,128,128,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":3,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,64],\"width\":0.75,\"style\":\"esriSLSSolid\"}},\"field\":\"CountNonNull_dim_customer_customer_id_\",\"minValue\":1},\"labelingInfo\":[{\"labelExpressionInfo\":{\"expression\":\"// PowerBI number format: g\\n\\nif (IsEmpty($feature[\\\"CountNonNull_dim_customer_customer_id_\\\"]))\\n{\\n  return $feature[\\\"CountNonNull_dim_customer_customer_id_\\\"] \\n}\\nIIF(Text($feature[\\\"CountNonNull_dim_customer_customer_id_\\\"], \\\"#\\\") == \\\"0\\\" || Text($feature[\\\"CountNonNull_dim_customer_customer_id_\\\"], \\\"#\\\") == \\\"-0\\\", \\\"\\\", Text($feature[\\\"CountNonNull_dim_customer_customer_id_\\\"], \\\"#\\\"))\"},\"labelPlacement\":\"esriServerPointLabelPlacementAboveCenter\",\"labelPosition\":\"curved\",\"repeatLabel\":true,\"symbol\":{\"type\":\"esriTS\",\"color\":[20,20,20,255],\"font\":{\"family\":\"Arial Unicode MS\",\"size\":12},\"horizontalAlignment\":\"center\",\"kerning\":true,\"haloColor\":[255,255,255,255],\"haloSize\":1.5,\"rotated\":false,\"text\":\"\",\"verticalAlignment\":\"baseline\",\"xoffset\":0,\"yoffset\":0,\"angle\":0,\"lineWidth\":192,\"lineHeight\":1},\"where\":\"\"}],\"transparency\":0},\"featureReduction\":{\"type\":\"cluster\",\"clusterRadius\":20,\"clusterMinSize\":16.5,\"clusterMaxSize\":34,\"disablePopup\":false,\"popupInfo\":{\"popupElements\":[{\"type\":\"text\",\"text\":\"This cluster represents <b>{cluster_count}</b> features.\"},{\"type\":\"text\",\"text\":\"The average value of <b>Count of customer_id</b> within this cluster is <b>{cluster_avg_CountNonNull_dim_customer_customer_id_}</b>.\"}],\"description\":\"This cluster represents <b>{cluster_count}</b> features.\",\"expressionInfos\":[],\"fieldInfos\":[{\"fieldName\":\"cluster_count\",\"format\":{\"digitSeparator\":true,\"places\":0},\"isEditable\":true,\"label\":\"Number of features\",\"visible\":true},{\"fieldName\":\"cluster_avg_CountNonNull_dim_customer_customer_id_\",\"format\":{\"digitSeparator\":true,\"places\":2},\"isEditable\":true,\"label\":\"Average Count of customer_id\",\"visible\":true}],\"title\":\"Cluster summary\"},\"drawingInfo\":{\"renderer\":{\"authoringInfo\":{\"classificationMethod\":\"esriClassifyNaturalBreaks\",\"isAutoGenerated\":true,\"type\":\"classedSize\"},\"type\":\"classBreaks\",\"visualVariables\":[],\"classBreakInfos\":[{\"classMaxValue\":4,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":0.75,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":9,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":13.166666666666666,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":15,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":25.583333333333332,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":23,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":38,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":32,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":50.416666666666664,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":42,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":62.83333333333333,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":57,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":75.25,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":75,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":87.66666666666666,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":92,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":100.08333333333333,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}},{\"classMaxValue\":136,\"symbol\":{\"type\":\"esriSMS\",\"color\":[250,168,63,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":112.5,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1.7475,\"style\":\"esriSLSSolid\"}}}],\"defaultLabel\":\"Other\",\"defaultSymbol\":{\"type\":\"esriSMS\",\"color\":[128,128,128,255],\"angle\":0,\"xoffset\":0,\"yoffset\":0,\"size\":3,\"style\":\"esriSMSCircle\",\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,64],\"width\":0.75,\"style\":\"esriSLSSolid\"}},\"field\":\"cluster_avg_CountNonNull_dim_customer_customer_id_\",\"minValue\":1},\"labelingInfo\":[{\"deconflictionStrategy\":\"none\",\"labelExpressionInfo\":{\"expression\":\"$feature[\\\"cluster_count\\\"];\\n                var value = $feature[\\\"cluster_count\\\"];\\n                var num = Count(Text(Round(value)));\\n                var label = When(\\n                  num < 4, Text(value, \\\"#.#\\\"),\\n                  num == 4, Text(value / Pow(10, 3), \\\"#.0k\\\"),\\n                  num <= 6, Text(value / Pow(10, 3), \\\"#k\\\"),\\n                  num == 7, Text(value / Pow(10, 6), \\\"#.0m\\\"),\\n                  num > 7, Text(value / Pow(10, 6), \\\"#m\\\"),\\n                  Text(value, \\\"#,###\\\")\\n                );\\n                return label;\"},\"labelPlacement\":\"esriServerPointLabelPlacementCenterCenter\",\"labelPosition\":\"curved\",\"repeatLabel\":true,\"symbol\":{\"type\":\"esriTS\",\"color\":[255,255,255,255],\"font\":{\"family\":\"Noto Sans\",\"size\":9},\"horizontalAlignment\":\"center\",\"kerning\":true,\"rotated\":false,\"text\":\"\",\"verticalAlignment\":\"baseline\",\"xoffset\":0,\"yoffset\":0,\"angle\":0,\"lineWidth\":192,\"lineHeight\":1}}]},\"showLabels\":true,\"fields\":[{\"isAutoGenerated\":true,\"name\":\"cluster_count\",\"alias\":\"cluster_count\",\"statisticType\":\"count\"},{\"isAutoGenerated\":true,\"name\":\"cluster_avg_CountNonNull_dim_customer_customer_id_\",\"onStatisticField\":\"CountNonNull_dim_customer_customer_id_\",\"statisticType\":\"avg\"}]},\"locationProvider\":{\"type\":\"coordinates\",\"lookupFields\":[{\"lookupField\":\"xFieldName\",\"outField\":\"dim_geography_longitude\"},{\"lookupField\":\"yFieldName\",\"outField\":\"dim_geography_latitude\"}],\"sourceSR\":4326,\"targetSR\":3857},\"minScale\":0,\"maxScale\":0,\"definitionExpression\":null,\"templates\":[{\"name\":\"New Feature\",\"description\":\"\",\"prototype\":{\"attributes\":{\"dim_geography_state\":null,\"dim_geography_latitude\":null,\"dim_geography_longitude\":null,\"CountNonNull_dim_customer_customer_id_\":null,\"ROW_ID\":null}}}],\"elevationInfo\":null,\"name\":\"Coordinates\",\"type\":\"DataLayer\",\"queryParameters\":{\"tableId\":\"\"}},\"featureSet\":{\"features\":[{\"attributes\":{},\"geometry\":{\"x\":0,\"y\":0,\"type\":\"point\",\"spatialReference\":{\"latestWkid\":3857,\"wkid\":102100}}}]}}]}}],\"tables\":[],\"baseMap\":{\"baseMapLayers\":[{\"id\":\"VectorTile_3287\",\"opacity\":1,\"title\":\"OpenStreetMap Style\",\"visibility\":true,\"layerType\":\"VectorTileLayer\",\"styleUrl\":\"https://cdn.arcgis.com/sharing/rest/content/items/165d7a1e43164d828064eb2027e219d5/resources/styles/root.json\"}],\"title\":\"OpenStreetMap Style\",\"origItemId\":\"c29cfb7875fc4b97b58ba6987c460862\"},\"version\":\"2.26\",\"authoringApp\":\"ArcGIS for Power BI\",\"authoringAppVersion\":\"2026.2.992\",\"bookmarks\":[],\"initialState\":{\"viewpoint\":{\"targetGeometry\":{\"spatialReference\":{\"latestWkid\":3857,\"wkid\":102100},\"xmin\":-49005681.241100326,\"ymin\":-5875625.638192793,\"xmax\":-41520967.43141785,\"ymax\":1266650.2847721768}}}}},\"webmapExtensions\":{\"format\":2}},\"embedCheckPassed\":false}'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "geometryCache": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"key\":\"cachedgeocode@@br\",\"compressionMethod\":\"pako\",\"data\":\"H4sIAAAAAAAAA3WVS2/bWAyF/4vWKXH55vW6m9nOph0MZuGkapA2TgzbwGAQ5L8P9Ugh1LQWhnEhfTqHPKTehvNxf3naP/85fh9P48vDOOzehuf9ZTxfvvx8+jbsONTvhn/n/9gIW3u/Gx7H18N4OT2N52H3d97/+pCQ15c/Pg+74XQeft3w30T7Ouw+aWdFUlDpejf8lScs3ho2CGzRp+v9/e430uGxIEl3ThkgnZfnFhy1nuoMohO16bJr3vFUKXPRTgLOk88ZFYyICkTGEwmvSeeHimTYLRDImTfKGFXIBBqx3cCdflRGo5mpQGdcdRllwVIpkV8zHl8rSUo8maMQWiAYrWt3yHO9Ufb7faXGRKQF9FiLsuLSaWgDMu03zH37Xgljak4Bqtw2tUL3zkypDm0+lmveWOVLlFy6gZv3bSryml8T6LdaeazkCSWxg4X0jVtSYcEA6xHzMRchGyt5RPkIQVZ/sbsOQc9asgOb4MyLa95DyZvvFxAV3+hTc8+k5dtmea3AHavmZu/ctYMYrsIkjYaDoi78KnGHEtWkabRM+9qJD2VsjBC8pKdpoey+Mpo+0fNBXNLabeF5FzeCjDXOx4XTw6XgGWXwLbeOddzGWJR7M0hqv7WMqtgZNmVvoD0+Epe7IzTAJcdiuorCHZ8qpx4sxhk5tI2yoNyYBkwis08qtsdLhWv5ZFYofcZCslzATQGR5khXs7B/LknuzSVbsG7WNSLYjLtEjr4V3byU64ijoeAU0JWBrJZjmz+0tLewV5FyO2gOI7jHdt5xGnjNOVNcTBaNPJcDhRZpBNRRtjnLZuYcMHRteKtoh4Ln2L2FgKmv0rIZ3Xtu87m7ZS725SrykIwnUCqZSRkP4gbWlkR0KZbQqfrSWQYsFMEQF3eUS7hnVHHpaxav0FR96VKSBGf1TX+FIefa0h4SfwzkP+//AzL6TVdeCAAA\"}'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Number of Customers Per State'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "35D"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'center'"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "b18891a362d8c42643ff",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_geography"
+              }
+            },
+            "Property": "state"
+          }
+        },
+        "type": "TopN",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "subquery",
+              "Expression": {
+                "Subquery": {
+                  "Query": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "dim_geography",
+                        "Type": 0
+                      },
+                      {
+                        "Name": "_",
+                        "Entity": "_Measures",
+                        "Type": 0
+                      }
+                    ],
+                    "Select": [
+                      {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Source": "d"
+                            }
+                          },
+                          "Property": "state"
+                        },
+                        "Name": "field"
+                      }
+                    ],
+                    "OrderBy": [
+                      {
+                        "Direction": 2,
+                        "Expression": {
+                          "Measure": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "_"
+                              }
+                            },
+                            "Property": "Total Revenue"
+                          }
+                        }
+                      }
+                    ],
+                    "Top": 5
+                  }
+                }
+              },
+              "Type": 2
+            },
+            {
+              "Name": "d",
+              "Entity": "dim_geography",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "d"
+                          }
+                        },
+                        "Property": "state"
+                      }
+                    }
+                  ],
+                  "Table": {
+                    "SourceRef": {
+                      "Source": "subquery"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "b9d85d2d9c134c6958ec",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_geography"
+              }
+            },
+            "Property": "latitude"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "2b819a13a53bd78a753d",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_geography"
+              }
+            },
+            "Property": "longitude"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "721f99b2b610cb6a6804",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "dim_customer"
+                  }
+                },
+                "Property": "customer_id"
+              }
+            },
+            "Function": 5
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

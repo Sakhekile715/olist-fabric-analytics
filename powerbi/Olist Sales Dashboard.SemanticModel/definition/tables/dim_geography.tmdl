@@ -1,0 +1,78 @@
+table dim_geography
+	lineageTag: 660ea49e-019d-4ebf-b848-e7214b1e3b5f
+
+	column geography_key
+		dataType: string
+		lineageTag: 7ff2e55b-34ce-4e74-99be-a9439b19f91d
+		summarizeBy: none
+		sourceColumn: geography_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column zip_code
+		dataType: string
+		lineageTag: 1583aee1-a2d6-46c1-8a48-fb9d9960baa3
+		summarizeBy: none
+		sourceColumn: zip_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 1d55418d-f51d-4bbe-b8a0-5d83ade1cb8e
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: d65a6753-c869-4c38-9e70-3716ede86fd2
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		lineageTag: e0e9ed9c-e916-4387-8bdf-9d32f8fc0646
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column longitude
+		dataType: double
+		lineageTag: e57010e3-a4df-4754-ba94-787e2c641898
+		dataCategory: Longitude
+		summarizeBy: none
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column address_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 29910e99-2035-4f29-92a1-e504c99ae5cd
+		summarizeBy: none
+		sourceColumn: address_count
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_geography = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("5s2g7hpbwc2e3pod2mrvoh62sa-crvzq5feotvuxojtpudzbpx4gu.datawarehouse.fabric.microsoft.com", "olist_dwh"),
+				    gold_dim_geography = Source{[Schema="gold",Item="dim_geography"]}[Data]
+				in
+				    gold_dim_geography
+
+	annotation PBI_ResultType = Table
+

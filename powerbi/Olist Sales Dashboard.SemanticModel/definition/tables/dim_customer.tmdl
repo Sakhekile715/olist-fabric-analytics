@@ -1,0 +1,55 @@
+table dim_customer
+	lineageTag: 0c4550ee-9008-479e-a83e-ac5dad620eb8
+
+	column customer_key
+		dataType: string
+		lineageTag: 2b0e49f8-8882-4cac-a7d3-a10f5d7627e6
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: 4398d030-6c43-427e-8808-a5724a8e2ab5
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column zip_code
+		dataType: string
+		lineageTag: 0c5adbcf-6058-4172-8556-8fa7b6a1b3c9
+		summarizeBy: none
+		sourceColumn: zip_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 16d4b9fe-16e6-4d1b-93ca-e6036bee4610
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: c3aebd88-9dab-415b-8401-aecad773c5e2
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_customer = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("5s2g7hpbwc2e3pod2mrvoh62sa-crvzq5feotvuxojtpudzbpx4gu.datawarehouse.fabric.microsoft.com", "olist_dwh"),
+				    gold_dim_customer = Source{[Schema="gold",Item="dim_customer"]}[Data]
+				in
+				    gold_dim_customer
+
+	annotation PBI_ResultType = Table
+

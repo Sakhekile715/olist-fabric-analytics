@@ -1,0 +1,54 @@
+table dim_seller
+	lineageTag: afd5296a-ae91-4a5a-a7ed-823dfc8c2d6d
+
+	column seller_key
+		dataType: string
+		lineageTag: 494042ed-8912-45de-9df9-b22e496ac4b2
+		summarizeBy: none
+		sourceColumn: seller_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_id
+		dataType: string
+		lineageTag: c97adb0f-492b-46ea-86ad-18384805442f
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column zip_code
+		dataType: string
+		lineageTag: 935edb84-d5e4-4e17-a90c-54a67e5e952d
+		summarizeBy: none
+		sourceColumn: zip_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 8fa844c2-6899-4434-95b4-c8e5fc4aca4b
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: 2fa39a09-acf1-4414-84bb-e58e7a39f6b9
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_seller = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("5s2g7hpbwc2e3pod2mrvoh62sa-crvzq5feotvuxojtpudzbpx4gu.datawarehouse.fabric.microsoft.com", "olist_dwh"),
+				    gold_dim_seller = Source{[Schema="gold",Item="dim_seller"]}[Data]
+				in
+				    gold_dim_seller
+
+	annotation PBI_ResultType = Table
+

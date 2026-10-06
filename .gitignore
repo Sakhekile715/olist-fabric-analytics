@@ -234,5 +234,10 @@ profiles.yml
 *.pbix.tmp
 ~$*
 
-# Power BI binaries cannot be diffed or reviewed; the report moves to .pbip
+# Power BI binaries cannot be diffed or reviewed; the report lives in powerbi/ as .pbip.
+# The .pbix is attached to a GitHub release instead.
 *.pbix
+
+# PBIP local state: per-user settings and the cached data model
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
