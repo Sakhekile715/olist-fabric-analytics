@@ -1,6 +1,13 @@
 # Copy to ~/.dbt/profiles.yml and fill in your own warehouse endpoint.
 #
-# Sign in with the account that owns the Fabric workspace.
+# Targets:
+#   dev - the default. Used for local development and the real build; signs in
+#         with your own Azure CLI session (see below).
+#   ci  - used only by the GitHub Actions build job (`dbt build --target ci`).
+#         Signs in as a service principal; every value comes from an environment
+#         variable populated from repository secrets, so nothing is stored here.
+#
+# dev: sign in with the account that owns the Fabric workspace.
 # Requires: az login --allow-no-subscriptions
 #   (the tenant has no Azure subscription, so a plain `az login` fails)
 #
@@ -19,4 +26,16 @@ olist_analytics:
       database: olist_dwh
       schema: gold
       authentication: CLI
+      threads: 4
+    ci:
+      type: fabric
+      driver: 'ODBC Driver 18 for SQL Server'
+      server: "{{ env_var('FABRIC_SQL_ENDPOINT') }}"
+      port: 1433
+      database: olist_dwh
+      schema: gold
+      authentication: ServicePrincipal
+      tenant_id: "{{ env_var('FABRIC_TENANT_ID') }}"
+      client_id: "{{ env_var('FABRIC_CLIENT_ID') }}"
+      client_secret: "{{ env_var('FABRIC_CLIENT_SECRET') }}"
       threads: 4

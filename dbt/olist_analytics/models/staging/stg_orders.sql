@@ -9,7 +9,7 @@ renamed AS (
     SELECT
         order_id,
         customer_id                          AS customer_order_key,
-        lower(trim(order_status))            AS order_status,
+        LOWER(TRIM(order_status))            AS order_status,
         CAST(order_purchase_timestamp AS DATETIME2(6))      AS purchased_at,
         CAST(order_approved_at AS DATETIME2(6))             AS approved_at,
         CAST(order_delivered_carrier_date AS DATETIME2(6))  AS shipped_at,
@@ -21,4 +21,3 @@ renamed AS (
 )
 
 SELECT * FROM renamed
-
