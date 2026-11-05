@@ -1,4 +1,4 @@
-with products AS (
+WITH products AS (
     SELECT * FROM {{ ref('stg_products') }}
 ),
 
@@ -10,7 +10,7 @@ final AS (
     SELECT
         {{ dbt_utils.generate_surrogate_key(['p.product_id']) }} AS product_key,
         p.product_id,
-        coalesce(t.category_name_en, 'unknown') AS category,
+        COALESCE(t.category_name_en, 'unknown') AS category,
         p.category_name_pt,
         p.weight_g,
         p.length_cm,

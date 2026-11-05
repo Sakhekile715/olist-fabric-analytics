@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # dbt reads both of these as --project-dir / --profiles-dir. Keep them absolute:
+  # the dbt steps also cd into the project, so a relative path would resolve twice.
+  DBT_PROJECT_DIR: ${{ github.workspace }}/dbt/olist_analytics
+  DBT_PROFILES_DIR: ${{ github.workspace }}/.ci-profiles
+  DBT_SEND_ANONYMOUS_USAGE_STATS: "false"
+
+jobs:
+  lint-parse:
+    name: sqlfluff lint and dbt parse
+    runs-on: ubuntu-24.04
+    env:
+      # Dummy values: dbt parse renders the ci profile but never connects.
+      FABRIC_TENANT_ID: 00000000-0000-0000-0000-000000000000
+      FABRIC_CLIENT_ID: 00000000-0000-0000-0000-000000000000
+      FABRIC_CLIENT_SECRET: dummy
+      FABRIC_SQL_ENDPOINT: dummy.datawarehouse.fabric.microsoft.com
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-ci.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt -r requirements-ci.txt
+
+      - name: Generate profiles.yml
+        run: |
+          mkdir -p "$DBT_PROFILES_DIR"
+          cp profiles.yml.example "$DBT_PROFILES_DIR/profiles.yml"
+
+      - name: dbt deps
+        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        run: dbt deps
+
+      - name: sqlfluff lint
+        # Advisory until the remaining layout violations are cleaned up.
+        continue-on-error: true
+        run: sqlfluff lint dbt/olist_analytics/models
+
+      - name: dbt parse
+        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        run: dbt parse --target ci
+
+  build:
+    name: dbt build (Fabric)
+    needs: lint-parse
+    if: vars.RUN_WAREHOUSE_BUILD == 'true'
+    runs-on: ubuntu-24.04
+    # Every run writes to the same ci_ schemas, so never run two at once.
+    concurrency:
+      group: fabric-ci-build
+      cancel-in-progress: false
+    env:
+      FABRIC_TENANT_ID: ${{ secrets.FABRIC_TENANT_ID }}
+      FABRIC_CLIENT_ID: ${{ secrets.FABRIC_CLIENT_ID }}
+      FABRIC_CLIENT_SECRET: ${{ secrets.FABRIC_CLIENT_SECRET }}
+      FABRIC_SQL_ENDPOINT: ${{ secrets.FABRIC_SQL_ENDPOINT }}
+      # Keeps CI out of the real silver and gold schemas (ci_silver, ci_gold).
+      DBT_SCHEMA_PREFIX: ci_
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-ci.txt
+
+      - name: Ensure ODBC Driver 18 for SQL Server
+        run: |
+          if odbcinst -q -d 2>/dev/null | grep -qx '\[ODBC Driver 18 for SQL Server\]'; then
+            echo "ODBC Driver 18 already installed"
+          else
+            echo "ODBC Driver 18 missing, installing msodbcsql18"
+            curl -fsSL https://packages.microsoft.com/keys/microsoft.asc \
+              | sudo gpg --dearmor --yes -o /usr/share/keyrings/microsoft-prod.gpg
+            curl -fsSL "https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list" \
+              | sudo tee /etc/apt/sources.list.d/mssql-release.list
+            sudo apt-get update
+            sudo ACCEPT_EULA=Y apt-get install -y msodbcsql18
+          fi
+          odbcinst -q -d
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Generate profiles.yml
+        run: |
+          mkdir -p "$DBT_PROFILES_DIR"
+          cp profiles.yml.example "$DBT_PROFILES_DIR/profiles.yml"
+
+      - name: dbt deps
+        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        run: dbt deps
+
+      - name: dbt build
+        working-directory: ${{ env.DBT_PROJECT_DIR }}
+        run: dbt build --target ci

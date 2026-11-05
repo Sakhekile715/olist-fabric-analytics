@@ -12,8 +12,8 @@ renamed AS (
         product_id,
         seller_id,
         CAST(shipping_limit_date AS DATETIME2(6)) AS shipping_limit_at,
-        CAST(price AS decimal(10,2))              AS item_price,
-        CAST(freight_value AS decimal(10,2))      AS freight_value
+        CAST(price AS DECIMAL(10,2))              AS item_price,
+        CAST(freight_value AS DECIMAL(10,2))      AS freight_value
 
     FROM source
 

@@ -6,9 +6,9 @@ renamed AS (
     SELECT
         review_id,
         order_id,
-        cast(review_score AS int)                     AS review_score,
-        cast(review_creation_date AS datetime2)       AS created_at,
-        cast(review_answer_timestamp AS datetime2)    AS answered_at
+        CAST(review_score AS INT)                     AS review_score,
+        CAST(review_creation_date AS DATETIME2)       AS created_at,
+        CAST(review_answer_timestamp AS DATETIME2)    AS answered_at
     FROM source
 )
 
