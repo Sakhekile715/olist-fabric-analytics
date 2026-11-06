@@ -10,6 +10,23 @@ End-to-end analytics engineering pipeline on Microsoft Fabric - PySpark ingestio
 | Gold, dims/facts/marts | Complete, 49 tests passing |
 | Power BI report | Published to Fabric workspace (Import mode) |
 
+## What this demonstrates
+
+- **Medallion architecture on Fabric:** a PySpark-ingested Bronze lakehouse, with
+  Silver and Gold built by dbt in a Fabric warehouse, reading Bronze by
+  three-part name with no data copied between layers.
+- **Data quality as code:** every Bronze table reconciled against its source, 49
+  dbt tests, and a custom test that keeps two definitions of lateness in step.
+- **Dimensional modelling:** a star schema with explicit grains, surrogate keys,
+  and child tables aggregated before joining so revenue cannot fan out.
+- **Finding and fixing a real bug:** reconciling a KPI against the delivery bands
+  exposed timestamp-versus-date logic that counted 1,292 on-time orders as late.
+- **Serving:** an Import-mode Power BI semantic model and five-page report,
+  versioned as PBIP text rather than a binary.
+- **CI with least privilege:** pull requests are linted, parsed and built by a
+  service principal with workspace Contributor access, into separate schemas
+  that never touch the tables the report reads.
+
 ## Running this project
 
 **Prerequisites.** A Microsoft Fabric workspace with a warehouse, Python 3.11,
@@ -72,6 +89,23 @@ returns far more than investment in making early deliveries earlier.
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    SRC["Olist CSVs<br/>9 files (Kaggle)"] --> BRZ
+    subgraph FABRIC["Microsoft Fabric"]
+        BRZ["Bronze<br/>olist_bronze lakehouse<br/>Delta tables, PySpark"]
+        SLV["Silver<br/>9 staging views (dbt)"]
+        GLD["Gold<br/>5 dims, 2 facts, 2 marts<br/>49 dbt tests"]
+        BRZ -->|"SQL analytics endpoint"| SLV --> GLD
+    end
+    GLD -->|"Import"| PBI["Power BI<br/>Olist Sales Model<br/>5-page report"]
+    subgraph CI["GitHub Actions on every pull request"]
+        PR["Pull request to main"] --> LP["lint-parse<br/>sqlfluff + dbt parse"]
+        LP --> BLD["build<br/>dbt build as service principal"]
+    end
+    BLD --> CIS["ci_silver / ci_gold<br/>isolated CI schemas"]
+```
+
 Medallion architecture on Microsoft Fabric.
 
 **Bronze** — raw ingestion. Nine Olist CSVs land in `Files/raw_data/` unmodified,
@@ -118,6 +152,13 @@ values and composite grains.
   macro using the same date-level logic as the delivery bands, and a dbt test
   fails if the two ever disagree. Fixing it moved 1,292 on-the-day orders from
   late to on time.
+- **A dedicated CI service principal with Contributor access, rather than a
+  personal login.** CI signs in as `olist-dbt-ci`, which can create schemas, views
+  and tables in the workspace but has no admin rights, and its credentials can be
+  rotated without touching anyone's account.
+- **Separate `ci_` schemas, so a pull-request build cannot affect production
+  tables.** CI writes to `ci_silver` and `ci_gold`; the `silver` and `gold` schemas
+  that Power BI reads come from the `dev` target.
 
 ### Lineage
 
@@ -199,3 +240,51 @@ table.
   one they use.
 - **Revenue excludes freight.** Revenue is item price only, as stated on the
   overview page; freight is reported separately as a share of revenue.
+
+## Continuous integration
+
+Every pull request to `main` runs [`.github/workflows/ci.yml`](.github/workflows/ci.yml),
+which has two jobs.
+
+| Job | When it runs | Credentials | What it checks |
+|---|---|---|---|
+| `lint-parse` | Every pull request to `main` | None | sqlfluff (advisory) and `dbt parse` |
+| `build` | After `lint-parse`, while `RUN_WAREHOUSE_BUILD` is `true` | `olist-dbt-ci` service principal | `dbt build --target ci`: 18 models and 49 tests |
+
+**lint-parse** needs no warehouse. It runs sqlfluff over the models with the
+`tsql` dialect, then `dbt parse`. sqlfluff uses the jinja templater with a small
+`dbt_utils` stub rather than the dbt templater, because the dbt templater needs a
+live warehouse connection on Fabric.
+
+**build** runs `dbt build --target ci` against the Fabric warehouse. It
+authenticates as the `olist-dbt-ci` service principal, which has the Contributor
+role on the workspace: enough to create schemas, views and tables, without admin
+rights. Its credentials are four GitHub secrets (`FABRIC_TENANT_ID`,
+`FABRIC_CLIENT_ID`, `FABRIC_CLIENT_SECRET`, `FABRIC_SQL_ENDPOINT`), which the `ci`
+target in `profiles.yml` reads through `env_var()`.
+
+**Isolated schemas.** The build job sets `DBT_SCHEMA_PREFIX=ci_`, which
+`generate_schema_name` puts in front of every schema, so CI builds into `ci_silver`
+and `ci_gold` and a pull request never touches the schemas Power BI reads. Locally
+the variable is unset and schema names are unchanged. A concurrency group stops two
+builds overlapping.
+
+**Gating.** build only runs when the repository variable `RUN_WAREHOUSE_BUILD` is
+`true`, because the project was built on a trial Fabric capacity. The variable is
+currently `true`, so build runs on every pull request.
+
+**sqlfluff is advisory.** About 160 violations remain, mostly layout rules such as
+aligned column aliases and long lines, and the lint step does not fail the job.
+
+![Pull request checks](docs/ci-pr-checks.png)
+
+![CI run summary](docs/ci-run-summary.png)
+
+<details>
+<summary>Build evidence</summary>
+
+![CI schemas in the warehouse](docs/ci-warehouse-schemas.png)
+
+![dbt build log from CI](docs/ci-build-log.png)
+
+</details>
